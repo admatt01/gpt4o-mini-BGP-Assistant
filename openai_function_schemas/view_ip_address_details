@@ -1,0 +1,14 @@
+{
+    "name": "view_ip_address_details",
+    "description": "Retrieve details for a specific IP address using the BGPView API",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "ip_addr": {
+          "type": "string",
+          "description": "The IP address to look up (e.g., '8.8.8.8')"
+        }
+      },
+      "required": ["ip_addr"]
+    }
+  }

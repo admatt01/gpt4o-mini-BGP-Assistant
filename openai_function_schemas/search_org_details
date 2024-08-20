@@ -1,0 +1,14 @@
+{
+  "name": "search_org_details",
+  "description": "Search for organization details using the BGPView API",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "query_term": {
+        "type": "string",
+        "description": "The search term to query organization details (e.g., organization name, ASN, IP address)"
+      }
+    },
+    "required": ["query_term"]
+  }
+}

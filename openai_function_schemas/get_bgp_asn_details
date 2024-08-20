@@ -1,0 +1,16 @@
+{
+  "name": "get_bgp_asn_details",
+  "description": "Retrieve details about a specific BGP ASN.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "asn": {
+        "type": "string",
+        "description": "The Autonomous System Number to get details for."
+      }
+    },
+    "required": [
+      "asn"
+    ]
+  }
+}

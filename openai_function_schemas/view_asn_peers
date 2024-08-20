@@ -1,0 +1,16 @@
+{
+  "name": "view_asn_peers",
+  "description": "Retrieve peers associated with a specific BGP ASN.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "asn": {
+        "type": "string",
+        "description": "The Autonomous System Number to get peers for."
+      }
+    },
+    "required": [
+      "asn"
+    ]
+  }
+}
