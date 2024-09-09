@@ -217,7 +217,7 @@ if st.sidebar.button("Upload"):
 if not st.session_state.thread_id:
     thread = client.beta.threads.create()
     st.session_state.thread_id = thread.id
-    intro_message = "Hello! I'm BGP AI Network Assistant. You can ask me about AS Paths, Prefixes, AS peers and public IP addresses and more."
+    intro_message = "Hello! I'm your BGP AI Network Assistant. You can ask me about AS Paths, Prefixes, AS peers and public IP addresses and more."
     st.session_state.messages.append({"role": "assistant", "content": intro_message, "avatar": avatar_url})
 
 # Display chat history
