@@ -20,7 +20,7 @@ from bgp_tools.view_ip_address_details import view_ip_address_details
 from bgp_tools.search_org_details import search_org_details
 
 # Set up Streamlit page
-st.set_page_config(page_title="Netbox AI Assistant", page_icon=":speech_balloon:")
+st.set_page_config(page_title="BGP AI Assistant", page_icon=":speech_balloon:")
 
 # Load environment variables from .env file
 load_dotenv()
@@ -58,7 +58,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # Display the centered title
-st.markdown("<h1 class='centered-title'>Netbox AI Assistant</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='centered-title'>BGP AI Assistant</h1>", unsafe_allow_html=True)
 
 
 # Declare the Assistant's ID
