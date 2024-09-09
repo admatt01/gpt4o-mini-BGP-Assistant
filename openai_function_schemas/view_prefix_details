@@ -1,0 +1,21 @@
+{
+  "name": "view_prefix_details",
+  "description": "Retrieve details for a specific IP prefix using the BGPView API",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "ip_addr": {
+        "type": "string",
+        "description": "The IP address part of the prefix (e.g., '192.209.63.0')"
+      },
+      "cidr": {
+        "type": "string",
+        "description": "The CIDR notation part of the prefix (e.g., '/24')"
+      }
+    },
+    "required": [
+      "ip_addr",
+      "cidr"
+    ]
+  }
+}
