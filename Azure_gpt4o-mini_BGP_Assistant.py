@@ -9,16 +9,30 @@ import uuid
 import asyncio
 import tempfile
 import aiohttp
-from tools.get_bgp_asn_details import get_bgp_asn_details
-from tools.view_asn_prefixes import view_asn_prefixes
-from tools.view_asn_peers import view_asn_peers
-from tools.view_asn_upstrm_dnstrm import view_asn_upstreams, view_asn_downstreams
-from tools.view_prefix_details import view_prefix_details
-from tools.view_ip_address_details import view_ip_address_details
-from tools.search_org_details import search_org_details
+import base64
+
+from bgp_tools.get_bgp_asn_details import get_bgp_asn_details
+from bgp_tools.view_asn_prefixes import view_asn_prefixes
+from bgp_tools.view_asn_peers import view_asn_peers
+from bgp_tools.view_asn_upstrm_dnstrm import view_asn_upstreams, view_asn_downstreams
+from bgp_tools.view_prefix_details import view_prefix_details
+from bgp_tools.view_ip_address_details import view_ip_address_details
+from bgp_tools.search_org_details import search_org_details
+
+# Set up Streamlit page
+st.set_page_config(page_title="Netbox AI Assistant", page_icon=":speech_balloon:")
 
 # Load environment variables from .env file
 load_dotenv()
+
+def get_image_base64(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode('utf-8')
+
+# Assuming your script is in the root of your project
+image_path = os.path.join("assets", "netbox_ai_avatar_64x64.png")
+avatar_base64 = get_image_base64(image_path)
+avatar_url = f"data:image/png;base64,{avatar_base64}"
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -30,6 +44,22 @@ client = AzureOpenAI(
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     api_version="2024-05-01-preview"
 )
+
+# Custom CSS to center the title
+st.markdown("""
+    <style>
+    .centered-title {
+        text-align: center;
+        font-size: 3rem;
+        font-weight: bold;
+        padding-bottom: 20px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# Display the centered title
+st.markdown("<h1 class='centered-title'>Netbox AI Assistant</h1>", unsafe_allow_html=True)
+
 
 # Declare the Assistant's ID
 assistant_id = os.environ.get('AZURE_OPENAI_ASSISTANT_ID')
@@ -102,11 +132,9 @@ async def execute_tool(tool_call):
         st.session_state.tool_results[tool_name] = False
         return {"tool_call_id": tool_call.id, "output": f"Error: {str(e)}"}
 
-# Set up Streamlit page
-st.set_page_config(page_title="BGP AI Assistant", page_icon=":speech_balloon:")
-st.title("Welcome to the BGP AI Assistant")
 
-# Sidebar
+# Sidebar - Avatar at the top
+st.sidebar.image("./assets/netbox_ai_avatar_sidebar-cropped.png", width=128)
 st.sidebar.title("Settings and Status")
 
 # Restart Session button
@@ -189,13 +217,17 @@ if st.sidebar.button("Upload"):
 if not st.session_state.thread_id:
     thread = client.beta.threads.create()
     st.session_state.thread_id = thread.id
-    intro_message = "Hello! I'm your BGP AI Assistant. How can I help you today? You can ask me about BGP ASN details or upload files for analysis."
-    st.session_state.messages.append({"role": "assistant", "content": intro_message})
+    intro_message = "Hello! I'm BGP AI Network Assistant. You can ask me about AS Paths, Prefixes, AS peers and public IP addresses and more."
+    st.session_state.messages.append({"role": "assistant", "content": intro_message, "avatar": avatar_url})
 
 # Display chat history
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    if message["role"] == "assistant":
+        with st.chat_message("assistant", avatar=avatar_url):
+            st.markdown(message["content"])
+    else:
+        with st.chat_message("user"):
+            st.markdown(message["content"])
 
 # Get user input
 if prompt := st.chat_input("Enter your message"):
@@ -246,8 +278,8 @@ if prompt := st.chat_input("Enter your message"):
         ]
         for message in assistant_messages:
             content = message.content[0].text.value
-            st.session_state.messages.append({"role": "assistant", "content": content})
-            with st.chat_message("assistant"):
+            st.session_state.messages.append({"role": "assistant", "content": content, "avatar": avatar_url})
+            with st.chat_message("assistant", avatar=avatar_url) as message:
                 st.markdown(content)
     else:
         logger.error(f"Run ended with unexpected status: {run.status}")
